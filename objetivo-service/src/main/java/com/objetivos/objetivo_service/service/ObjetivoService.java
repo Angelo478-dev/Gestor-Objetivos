@@ -1,5 +1,6 @@
 package com.objetivos.objetivo_service.service;
 
+import com.objetivos.objetivo_service.model.dto.ObjetivoDTO;
 import com.objetivos.objetivo_service.model.dto.ObjetivoRequest;
 import com.objetivos.objetivo_service.model.dto.ObjetivoResponse;
 import com.objetivos.objetivo_service.model.dto.UsuarioDTO;
@@ -84,6 +85,27 @@ public class ObjetivoService {
         return objetivos.stream()
                 .map(this::mapToObjetivoResponse)
                 .collect(Collectors.toList());
+    }
+
+    public List<ObjetivoDTO> obtenerObjetivosPorUsuario(Long usuarioId) {
+        // Obtener el usuario desde el servicio de usuarios
+        UsuarioDTO usuario = usuarioFeignClient.obtenerUsuarioPorId(usuarioId);
+
+        // Obtener los objetivos asociados al usuario
+        List<Objetivo> objetivos = objetivoRepository.findByUsuarioId(usuarioId);
+
+        // Mapear los objetivos al DTO extendido
+        return objetivos.stream().map(objetivo -> {
+            ObjetivoDTO dto = new ObjetivoDTO();
+            dto.setId(objetivo.getId());
+            dto.setTitulo(objetivo.getTitulo());
+            dto.setDescripcion(objetivo.getDescripcion());
+            dto.setFechaLimite(objetivo.getFechaLimite());
+            dto.setCompletado(objetivo.getCompletado() == true ? "1" : "0");
+            dto.setUsuarioId(usuario.getId());
+            dto.setUsuarioNombre(usuario.getNombre());
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     /**

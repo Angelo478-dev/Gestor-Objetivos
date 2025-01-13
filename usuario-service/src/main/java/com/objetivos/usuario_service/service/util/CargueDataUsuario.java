@@ -25,8 +25,8 @@ public class CargueDataUsuario implements CommandLineRunner {
                             Usuario.builder().nombre("Maria").apellido("Leguizamon").email("maria@gmail.com").telefono("3002563696").build(),
                             Usuario.builder().nombre("Mila").apellido("Jojovich").email("mila@gmail.com").telefono("3013002525").build(),
                             Usuario.builder().nombre("Diana").apellido("Bohorquez").email("diana@gmail.com").telefono("3025639698").build(),
-                            Usuario.builder().nombre("Sofia").apellido("Gomez").email("").telefono("3145635685").build(),
-                            Usuario.builder().nombre("John").apellido("Diaz").email("john@gmail.com").telefono("").build()
+                            Usuario.builder().nombre("Sofia").apellido("Gomez").email("Sofia@gmail.com").telefono("3145635685").build(),
+                            Usuario.builder().nombre("John").apellido("Diaz").email("john@gmail.com").telefono("3145635685").build()
                     )
             );
         }

@@ -95,9 +95,28 @@ public class UsuarioController {
     }
 
     /**
+     * Busca usuarios por su email.
+     *
+     * @param email email del usuario.
+     * @return lista de usuarios encontrados o un mensaje de error.
+     */
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Object> obtenerUsuariosPorEmail(@PathVariable String email) {
+        try {
+            String emailNormalizer = email.toUpperCase(); // Normalize to uppercase to ensure case-insensitive search
+            List<UsuarioResponse> usuarios = usuarioService.findByEmail(emailNormalizer);
+            return ResponseEntity.ok(usuarios);
+        } catch (ErrorMessage ex) {
+            // Devolver mensaje de error con código HTTP 404 si no se encuentran usuarios
+            UsuarioResponseError error = new UsuarioResponseError(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+    }
+
+    /**
      * Actualiza un usuario existente.
      *
-     * @param id      identificador del usuario a actualizar.
+     * @param id             identificador del usuario a actualizar.
      * @param usuarioRequest datos actualizados del usuario.
      * @return el usuario actualizado o el mensaje de error.
      */
