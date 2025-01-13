@@ -1,5 +1,6 @@
 package com.objetivos.objetivo_service.controller;
 
+import com.objetivos.objetivo_service.model.dto.ObjetivoDTO;
 import com.objetivos.objetivo_service.model.dto.ObjetivoRequest;
 import com.objetivos.objetivo_service.model.dto.ObjetivoResponse;
 import com.objetivos.objetivo_service.model.dto.ObjetivoResponseError;
@@ -111,6 +112,11 @@ public class ObjetivoController {
         }
     }
 
+    @GetMapping("/usuariosAllObjetivos/{id}")
+    public List<ObjetivoDTO> obtenerObjetivosPorUsuario(@PathVariable Long id) {
+        return objetivoService.obtenerObjetivosPorUsuario(id);
+    }
+
     /**
      * Crear un objetivo
      */
@@ -120,19 +126,19 @@ public class ObjetivoController {
             // Llamada al servicio para crear el objetivo
             Objetivo objetivo = objetivoService.createObjetivo(objetivoRequest);
 
-            //log.info("objetivo: "+objetivo);
+            // log.info("objetivo: "+objetivo);
             if (objetivo == null) {
-                String mensaje = "No se encuentra usuario con ID " + objetivoRequest.getUsuarioId() + 
-                             ". Por favor, verifique o cree un usuario.";
-                             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ObjetivoResponseMessage(mensaje));
+                String mensaje = "No se encuentra usuario con ID " + objetivoRequest.getUsuarioId() +
+                        ". Por favor, verifique o cree un usuario.";
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ObjetivoResponseMessage(mensaje));
             }
             return ResponseEntity.ok(objetivo);
 
         } catch (FeignException.NotFound ex) {
             // Manejar el caso específico de usuario no encontrado
-            String mensaje = "No se encuentra usuario con ID " + objetivoRequest.getUsuarioId() + 
-                             ". Por favor, verifique o cree un usuario.";
+            String mensaje = "No se encuentra usuario con ID " + objetivoRequest.getUsuarioId() +
+                    ". Por favor, verifique o cree un usuario.";
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ObjetivoResponseMessage(mensaje));
 
@@ -142,7 +148,7 @@ public class ObjetivoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ObjetivoResponseError(mensajeError));
         }
-    }    
+    }
 
     /**
      * Actualizar un objetivo

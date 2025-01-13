@@ -68,6 +68,25 @@ public class UsuarioService {
     }
 
     /**
+     * Busca usuarios por su email.
+     *
+     * @param email email del usuario.
+     * @return lista de usuarios encontrados.
+     * @throws ErrorMessage si no se encuentran usuarios con ese email.
+     */
+    public List<UsuarioResponse> findByEmail(String email) {
+        List<Usuario> usuarios = usuarioRepository.findByEmail(email);
+        if (usuarios.isEmpty()) {
+            log.error("No se encuentran usuarios con el email {}", email);
+            throw new ErrorMessage("No se encuentran usuarios con el email: " + email);
+        }
+
+        return usuarios.stream()
+                .map(this::mapToUsuarioResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Crea un nuevo usuario con datos de un DTO.
      *
      * @param usuarioRequest datos del usuario a crear.
@@ -89,7 +108,7 @@ public class UsuarioService {
             log.info("Usuario agregado con éxito: {}", usuario);
             return usuario;
 
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             log.error("Error de validación al crear usuario: {}", e.getMessage(), e);
             throw e; // Re-lanza la excepción si es necesario
         } catch (Exception e) {
